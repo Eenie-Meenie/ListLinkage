@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AYSendOpportunityView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ohf-ig-mMf">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pickFieldLaba" translatesAutoresizingMaskIntoConstraints="NO" id="uKY-sZ-DdW">
+                            <rect key="frame" x="10" y="10" width="20" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="20" id="Zvt-db-nuF"/>
+                                <constraint firstAttribute="height" constant="20" id="cFs-aJ-T4U"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="您本周还有1次派送机会" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3n0-AP-OOS">
+                            <rect key="frame" x="40" y="11.5" width="160" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="1" green="0.52352787860000005" blue="0.151205593" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qxR-mc-zW8">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="Vlw-bA-g04"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xne-kq-zpp">
+                            <rect key="frame" x="0.0" y="39" width="375" height="1"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="GE1-yD-K7Y"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="0.99863547090000004" green="0.89923876520000001" blue="0.80230724809999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="uKY-sZ-DdW" firstAttribute="centerY" secondItem="Ohf-ig-mMf" secondAttribute="centerY" id="0CX-5t-4wc"/>
+                        <constraint firstAttribute="bottom" secondItem="xne-kq-zpp" secondAttribute="bottom" id="78e-Ku-4jr"/>
+                        <constraint firstAttribute="trailing" secondItem="qxR-mc-zW8" secondAttribute="trailing" id="Bgr-9e-z5n"/>
+                        <constraint firstItem="uKY-sZ-DdW" firstAttribute="leading" secondItem="Ohf-ig-mMf" secondAttribute="leading" constant="10" id="UpZ-qX-HQc"/>
+                        <constraint firstItem="qxR-mc-zW8" firstAttribute="top" secondItem="Ohf-ig-mMf" secondAttribute="top" id="Zzd-bJ-MLv"/>
+                        <constraint firstAttribute="trailing" secondItem="xne-kq-zpp" secondAttribute="trailing" id="a7Y-HU-fXl"/>
+                        <constraint firstItem="xne-kq-zpp" firstAttribute="leading" secondItem="Ohf-ig-mMf" secondAttribute="leading" id="b9b-VH-Q9f"/>
+                        <constraint firstItem="3n0-AP-OOS" firstAttribute="leading" secondItem="uKY-sZ-DdW" secondAttribute="trailing" constant="10" id="eDi-Br-JZe"/>
+                        <constraint firstItem="3n0-AP-OOS" firstAttribute="centerY" secondItem="uKY-sZ-DdW" secondAttribute="centerY" id="fvN-e1-pDC"/>
+                        <constraint firstItem="qxR-mc-zW8" firstAttribute="leading" secondItem="Ohf-ig-mMf" secondAttribute="leading" id="qo5-gY-7n5"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Ohf-ig-mMf" secondAttribute="bottom" id="s2J-dD-Hz2"/>
+                <constraint firstItem="Ohf-ig-mMf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="s9K-1d-XOA"/>
+                <constraint firstAttribute="trailing" secondItem="Ohf-ig-mMf" secondAttribute="trailing" id="xYx-eZ-1iu"/>
+                <constraint firstItem="Ohf-ig-mMf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="yU9-ac-O6O"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="sendNumberLabel" destination="3n0-AP-OOS" id="zJB-Hk-xjb"/>
+            </connections>
+            <point key="canvasLocation" x="35.5" y="-252"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="pickFieldLaba" width="19" height="16"/>
+    </resources>
+</document>

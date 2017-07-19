@@ -1,0 +1,24 @@
+//
+//  PrefixHeader.pch
+//  ListLinkageDemo
+//
+//  Created by working on 2017/7/18.
+//  Copyright © 2017年 hanbo. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* PrefixHeader_pch */
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "AYConstantValue.h"
+#import "AYHeader.h"
+
+#endif
