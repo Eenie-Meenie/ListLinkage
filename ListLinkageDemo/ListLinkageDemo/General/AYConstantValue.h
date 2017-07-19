@@ -14,34 +14,6 @@
 
 #define AppDelegateAccessor ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 
-//QQ
-#define QQAppId @"1105784981"
-#define QQSecret @"vSSv41FDZf1yPIoo"
-//新浪微博
-#define WeiBoAppKey @"2021060910"
-#define WeiBoSecret @"6ad2edb611a860e481b769de4cbeb69e"
-#define WeiboRedirect @"https://api.weibo.com/oauth2/default.html"
-
-//微信
-#define WeiXinAppId @"wx383da14fe8636fee"
-#define WeiXinSecret @"b43fa593df42fa5e65d5cd2d95f047d7"
-#define redirectURL @"http://www.baidu.com"
-
-// 萤石
-#define EzvizAppKey @"062f0718a1504aa7b6a5e6c7b348804d"
-#define EZPushAppSecret @"aa03a8b81a7dbba11ddcbb17c93bbbf2"
-
-// blugly
-#define BluglyAppID @"ce4c8a4569"
-#define BluglyAppKey @"8e8b0836-5ff6-448f-9698-01dee3bd6875"
-
-//环信
-#define EMAppKey @"1174161213115377#aijingxi"
-#define EMApnsCertName @"aijingxiDev"
-#define EMUserName [NSString stringWithFormat:@"im_%@",[AYPublicTool sharedInstance].userInfo.userid]
-#define EMPassWord [[EMUserName md5String] uppercaseString]
-#define EMUserFriendName(userId) [NSString stringWithFormat:@"im_%@",userId]
-
 #define IntToString(integer) [NSString stringWithFormat:@"%zd",integer]
 #define FloatToString(float) [NSString stringWithFormat:@"%f",float]
 #define IntToNumber(number) [NSNumber numberWithInteger:number]
