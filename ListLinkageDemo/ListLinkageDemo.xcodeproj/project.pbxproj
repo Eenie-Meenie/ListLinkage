@@ -404,6 +404,7 @@
 				TargetAttributes = {
 					228AB6991F174CC100FB3912 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 83W49QPWQY;
 						ProvisioningStyle = Automatic;
 					};
 					228AB6B51F174CC200FB3912 = {
@@ -682,7 +683,7 @@
 			baseConfigurationReference = AD5F0B2FF102AB49367EACC6 /* Pods-ListLinkageDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83W49QPWQY;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = ListLinkageDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -697,7 +698,7 @@
 			baseConfigurationReference = 8ABCC1B167B017C0CD6D9B5D /* Pods-ListLinkageDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83W49QPWQY;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = ListLinkageDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

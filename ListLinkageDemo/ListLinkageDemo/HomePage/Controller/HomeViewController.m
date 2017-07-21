@@ -19,6 +19,7 @@
 @property (nonatomic, strong) AYShippingAddressView *addressView;  // 地址视图
 @property (nonatomic, strong) AYSendOpportunityView *sendView;     // 派送次数视图
 @property (nonatomic, strong) NSMutableArray *dataArray; // 数据
+@property(nonatomic, strong) NSIndexPath *lastPath;  // 单选
 
 @end
 
@@ -181,6 +182,18 @@
         AYCollectFoodModel *model = self.dataArray[indexPath.row];
         leftCell.titleLabel.text = model.vegname;
         leftCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        NSInteger row = [indexPath row];
+        NSInteger oldRow = [_lastPath row];
+        if (row == oldRow && _lastPath!=nil) {
+            // 被选中状态
+            leftCell.contentView.backgroundColor = KLightYellowColor;
+            leftCell.titleLabel.textColor = kOrangeTextColor;
+        }else{
+            leftCell.contentView.backgroundColor = [UIColor clearColor];
+            leftCell.titleLabel.textColor = [UIColor blackColor];
+        }
+        
         return leftCell;
     } else {
         AYRightPickTableViewCell *rightCell = [tableView dequeueReusableCellWithIdentifier:@"AYRightPickTableViewCell" forIndexPath:indexPath];
@@ -196,16 +209,17 @@
 #pragma mark - table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_leftTableView == tableView) {
-        AYLeftPickTableViewCell *leftCell = [tableView cellForRowAtIndexPath:indexPath];
-        leftCell.contentView.backgroundColor = KLightYellowColor;
-        
-        NSArray *array = [tableView visibleCells];
-        for (AYLeftPickTableViewCell *leftCell in array) {
-            // 不打对勾
-            leftCell.titleLabel.textColor = [UIColor blackColor];
+        NSInteger newRow = [indexPath row];
+        NSInteger oldRow = (self .lastPath !=nil)?[self .lastPath row]:-1;
+        if (newRow != oldRow) {
+            AYLeftPickTableViewCell *newCell = [tableView cellForRowAtIndexPath:indexPath];
+            newCell.contentView.backgroundColor = KLightYellowColor;
+            newCell.titleLabel.textColor = kOrangeTextColor;
+            AYLeftPickTableViewCell *oldCell = [tableView cellForRowAtIndexPath:self.lastPath];
+            oldCell.contentView.backgroundColor = [UIColor clearColor];
+            oldCell.titleLabel.textColor = [UIColor blackColor];
         }
-        // 打对勾
-        leftCell.titleLabel.textColor = kOrangeTextColor;
+        self.lastPath = indexPath;
         [_rightTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
 }
@@ -248,7 +262,7 @@
         
         [UIView animateWithDuration:0.2 animations:^{
             [self.view layoutIfNeeded];
-            self.rightTableView.frame = CGRectMake(LeftTable_Width, SendView_Height+64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - SendView_Height);
+            self.rightTableView.frame = CGRectMake(LeftTable_Width, SendView_Height + 64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - SendView_Height);
             self.leftTableView.frame = CGRectMake(0,  SendView_Height+64, LeftTable_Width, kScreenHeight - 64 - 50 - SendView_Height);
         } completion:^(BOOL finished) {
             nil;
@@ -263,21 +277,11 @@
         [UIView animateWithDuration:0.2 animations:^{
             [self.view layoutIfNeeded];
             self.rightTableView.frame = CGRectMake(LeftTable_Width, Address_Height + SendView_Height+64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height);
-            self.leftTableView.frame = CGRectMake(0, Address_Height + SendView_Height+64, LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height);
+            self.leftTableView.frame = CGRectMake(0, Address_Height + SendView_Height + 64, LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height);
         } completion:^(BOOL finished) {
             nil;
         }];
     }
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
