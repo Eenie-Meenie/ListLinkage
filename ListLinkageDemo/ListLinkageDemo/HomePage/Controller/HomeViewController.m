@@ -8,6 +8,8 @@
 
 #import "HomeViewController.h"
 #import "AYConstantValue.h"
+#import "AYShippingAddressView.h"
+#import "AYSendOpportunityView.h"
 
 #define LeftTable_Width 100  // 左侧tableView的宽度
 #define Address_Height  80   // 地址视图高度
@@ -19,7 +21,8 @@
 @property (nonatomic, strong) AYShippingAddressView *addressView;  // 地址视图
 @property (nonatomic, strong) AYSendOpportunityView *sendView;     // 派送次数视图
 @property (nonatomic, strong) NSMutableArray *dataArray; // 数据
-@property(nonatomic, strong) NSIndexPath *lastPath;  // 单选
+@property (nonatomic, strong) NSIndexPath *lastPath;  // 单选
+@property (nonatomic, assign) BOOL isRepeatRolling;  // 是否重复滚动
 
 @end
 
@@ -36,7 +39,8 @@
 #pragma mark - sysetem method
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"列表联动";
+    self.navigationItem.title = @"列表联动";
+    self.isRepeatRolling = NO; // 默认NO
     [self loadData];
     [self creatSubViews];
 }
@@ -56,14 +60,20 @@
 
 - (void)creatSubViews {
     // 解决tableView偏移
-     self.automaticallyAdjustsScrollViewInsets = NO;
+    // 取消导航栏对视图的影响
+    if (@available(iOS 11.0, *)) {
+        self.leftTableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        self.rightTableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     // 地址视图
     self.addressView = [[[NSBundle mainBundle] loadNibNamed:@"AYShippingAddressView" owner:self options:nil] firstObject];
     //    self.addressView.frame = CGRectMake(0, 0, kScreenWidth, 80);
     [self.view addSubview:self.addressView];
     [self.addressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(64);
+        make.top.mas_equalTo(NAVIGATION_HEIGHT);
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(Address_Height);
     }];
@@ -79,12 +89,14 @@
         make.height.mas_equalTo(SendView_Height);
     }];
 
-    
     // 左侧tableView
-    self.leftTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, Address_Height + SendView_Height+64, LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height) style:UITableViewStylePlain];
+    self.leftTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, Address_Height + SendView_Height + NAVIGATION_HEIGHT, LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - Address_Height - SendView_Height) style:UITableViewStylePlain];
     self.leftTableView.backgroundColor = KLightYellowColor;
     self.leftTableView.dataSource = self;
     self.leftTableView.delegate = self;
+    self.leftTableView.estimatedRowHeight = 0;
+    self.leftTableView.estimatedSectionFooterHeight = 0;
+    self.leftTableView.estimatedSectionHeaderHeight = 0;
     [self.leftTableView registerNib:[UINib nibWithNibName:@"AYLeftPickTableViewCell" bundle:nil] forCellReuseIdentifier:@"AYLeftPickTableViewCell"];
     self.leftTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.leftTableView];
@@ -93,10 +105,13 @@
     self.leftTableView.showsVerticalScrollIndicator = NO; // 隐藏滚动条
     [self.leftTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
     
-    self.rightTableView = [[UITableView alloc] initWithFrame:CGRectMake(LeftTable_Width, Address_Height + SendView_Height + 64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height) style:UITableViewStyleGrouped];
+    self.rightTableView = [[UITableView alloc] initWithFrame:CGRectMake(LeftTable_Width, Address_Height + SendView_Height + NAVIGATION_HEIGHT, kScreenWidth - LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - Address_Height - SendView_Height) style:UITableViewStyleGrouped];
     self.rightTableView.backgroundColor = [UIColor clearColor];
     self.rightTableView.dataSource = self;
     self.rightTableView.delegate = self;
+    self.rightTableView.estimatedRowHeight = 0;
+    self.rightTableView.estimatedSectionFooterHeight = 0;
+    self.rightTableView.estimatedSectionHeaderHeight = 0;
     [self.rightTableView registerNib:[UINib nibWithNibName:@"AYRightPickTableViewCell" bundle:nil] forCellReuseIdentifier:@"AYRightPickTableViewCell"];
     self.rightTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.rightTableView];
@@ -159,12 +174,10 @@
     } else {
         UIView *headView = [UIView new];
         headView.backgroundColor = RGBA(254.f, 230.f, 206.f, 1);
-        
         UILabel *headLabel = [UILabel new];
         [headView addSubview:headLabel];
         headLabel.textColor = kOrangeTextColor;
         headLabel.font = kkFont16;
-        
         AYCollectFoodModel *model = self.dataArray[section];
         headLabel.text = model.vegname;
         [headLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -174,7 +187,6 @@
         return headView;
     }
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.leftTableView == tableView) {
@@ -220,6 +232,7 @@
             oldCell.titleLabel.textColor = [UIColor blackColor];
         }
         self.lastPath = indexPath;
+        self.isRepeatRolling = YES;
         [_rightTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
 }
@@ -240,15 +253,24 @@
         if (bottomOffset <= height) {
             NSIndexPath *bottomIndexPath = [[self.rightTableView indexPathsForVisibleRows] lastObject];
             NSIndexPath *moveIndexPath = [NSIndexPath indexPathForRow:bottomIndexPath.section inSection:0];
-            [self.leftTableView selectRowAtIndexPath:moveIndexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+            if (self.isRepeatRolling == NO) { // 防止重复滚动
+                [self.leftTableView selectRowAtIndexPath:moveIndexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+            }
         } else {
             NSIndexPath *topIndexPath = [[self.rightTableView indexPathsForVisibleRows]firstObject];
             NSIndexPath *moveIndexPath = [NSIndexPath indexPathForRow:topIndexPath.section inSection:0];
-            [self.leftTableView selectRowAtIndexPath:moveIndexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+            if (self.isRepeatRolling == NO) { // 防止重复滚动
+                [self.leftTableView selectRowAtIndexPath:moveIndexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+            }
         }
     }else{
         return;
     }
+}
+
+// scrollView 开始拖动
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.isRepeatRolling = NO;
 }
 
 #pragma mark - 滑动视图上移动画
@@ -256,28 +278,28 @@
     if (scrollView.contentOffset.y > 0) {
         [self.addressView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
-            make.top.mas_equalTo(-Address_Height+64);
+            make.top.mas_equalTo(-Address_Height+NAVIGATION_HEIGHT);
             make.height.mas_equalTo(Address_Height);
         }];
         
         [UIView animateWithDuration:0.2 animations:^{
             [self.view layoutIfNeeded];
-            self.rightTableView.frame = CGRectMake(LeftTable_Width, SendView_Height + 64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - SendView_Height);
-            self.leftTableView.frame = CGRectMake(0,  SendView_Height+64, LeftTable_Width, kScreenHeight - 64 - 50 - SendView_Height);
+            self.rightTableView.frame = CGRectMake(LeftTable_Width, SendView_Height + NAVIGATION_HEIGHT, kScreenWidth - LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - SendView_Height);
+            self.leftTableView.frame = CGRectMake(0,  SendView_Height + NAVIGATION_HEIGHT, LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - SendView_Height);
         } completion:^(BOOL finished) {
             nil;
         }];
     } else {
         [self.addressView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
-            make.top.mas_equalTo(64);
+            make.top.mas_equalTo(NAVIGATION_HEIGHT);
             make.height.mas_equalTo(Address_Height);
         }];
         
         [UIView animateWithDuration:0.2 animations:^{
             [self.view layoutIfNeeded];
-            self.rightTableView.frame = CGRectMake(LeftTable_Width, Address_Height + SendView_Height+64, kScreenWidth - LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height);
-            self.leftTableView.frame = CGRectMake(0, Address_Height + SendView_Height + 64, LeftTable_Width, kScreenHeight - 64 - 50 - Address_Height - SendView_Height);
+            self.rightTableView.frame = CGRectMake(LeftTable_Width, Address_Height + SendView_Height+NAVIGATION_HEIGHT, kScreenWidth - LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - Address_Height - SendView_Height);
+            self.leftTableView.frame = CGRectMake(0, Address_Height + SendView_Height + NAVIGATION_HEIGHT, LeftTable_Width, kScreenHeight - NAVIGATION_HEIGHT - 50 - Address_Height - SendView_Height);
         } completion:^(BOOL finished) {
             nil;
         }];

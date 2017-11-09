@@ -51,6 +51,7 @@
 
 #define kScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
+#define NAVIGATION_HEIGHT (CGRectGetHeight([[UIApplication sharedApplication] statusBarFrame]) + CGRectGetHeight(self.navigationController.navigationBar.frame))
 
 #define kThemeColor [UIColor colorWithRed:96.f / 255 green:174.f / 255  blue:88.f / 255 alpha:1]
 
